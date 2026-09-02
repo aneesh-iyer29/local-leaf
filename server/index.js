@@ -18,6 +18,17 @@ import { watchProject } from './watcher.js';
 import * as ws from './workspace.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// If the server was started from inside a Claude Code session (its Bash tool, or a terminal that
+// Claude Code opened), the process inherits that session's marker variables. Anything we spawn —
+// the integrated terminal's shell, `claude` started from it, latexmk, git — would then look like a
+// nested child session (Claude Code disables transcript saving, for one). Scrub them so every
+// child starts as a fresh, top-level environment.
+for (const key of Object.keys(process.env)) {
+  if (key === 'CLAUDECODE' || key.startsWith('CLAUDE_CODE_') || key.startsWith('CLAUDE_AGENT_') || key.startsWith('CLAUDE_PREVIEW_') || key === 'CLAUDE_PID' || key === 'CLAUDE_EFFORT') {
+    delete process.env[key];
+  }
+}
 const PORT = Number(process.env.PORT || 3737);
 const app = express();
 app.use(express.json({ limit: '300mb' }));
