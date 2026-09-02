@@ -1,0 +1,48 @@
+{
+  "name": "local-leaf",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A local, browser-based Overleaf-style LaTeX editor that compiles with the TeX distribution on your machine.",
+  "type": "module",
+  "bin": {
+    "leaf": "bin/leaf.js"
+  },
+  "scripts": {
+    "build": "node scripts/build.js",
+    "postinstall": "chmod +x node_modules/node-pty/prebuilds/*/spawn-helper 2>/dev/null || true",
+    "start": "node scripts/build.js && node server/index.js",
+    "serve": "node server/index.js --no-open",
+    "dev": "node scripts/build.js --watch & node server/index.js --no-open; wait"
+  },
+  "dependencies": {
+    "@codemirror/autocomplete": "^6.18.0",
+    "@codemirror/commands": "^6.7.0",
+    "@codemirror/language": "^6.10.0",
+    "@codemirror/legacy-modes": "^6.4.0",
+    "@codemirror/search": "^6.5.0",
+    "@codemirror/state": "^6.5.0",
+    "@codemirror/theme-one-dark": "^6.1.0",
+    "@codemirror/view": "^6.35.0",
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/addon-web-links": "^0.12.0",
+    "@xterm/xterm": "^6.0.0",
+    "chokidar": "^4.0.0",
+    "esbuild": "^0.24.0",
+    "express": "^4.21.0",
+    "node-pty": "^1.1.0",
+    "pdfjs-dist": "^4.9.0",
+    "ws": "^8.18.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aneesh-iyer29/local-leaf.git"
+  },
+  "homepage": "https://github.com/aneesh-iyer29/local-leaf#readme",
+  "engines": {
+    "node": ">=18"
+  },
+  "os": [
+    "darwin"
+  ]
+}

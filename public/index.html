@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>local-leaf</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6 26C6 12 14 6 28 6c0 14-6 22-20 22z' fill='%2347a248'/%3E%3Cpath d='M8 26C12 18 18 12 26 8' stroke='%23dff5df' stroke-width='2' fill='none'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/build/app.css" />
+</head>
+<body>
+  <header class="topbar">
+    <button class="brand" id="brand-btn" title="All projects">
+      <span class="leaf"></span>
+      <span class="brand-name">local-leaf</span>
+    </button>
+    <button id="home-btn" class="btn subtle editor-only" title="Back to all projects">‹ Projects</button>
+    <div class="project-menu">
+      <button id="project-btn" class="btn subtle" title="Switch project">
+        <span id="project-name">No project</span>
+        <span class="chev">▾</span>
+      </button>
+      <div id="project-dropdown" class="dropdown" hidden></div>
+    </div>
+    <button id="open-btn" class="btn" title="Open or import a project folder from anywhere on this Mac">Open folder…</button>
+    <input type="file" id="folder-input" webkitdirectory directory multiple hidden />
+    <input type="file" id="zip-input" accept=".zip,application/zip" hidden />
+
+    <div class="spacer"></div>
+
+    <label class="field">
+      <span>Main</span>
+      <select id="main-select"></select>
+    </label>
+    <label class="field">
+      <span>Engine</span>
+      <select id="engine-select">
+        <option value="pdflatex">pdfLaTeX</option>
+        <option value="xelatex">XeLaTeX</option>
+        <option value="lualatex">LuaLaTeX</option>
+      </select>
+    </label>
+    <label class="field toggle" title="Recompile automatically whenever a source file changes on disk">
+      <input type="checkbox" id="auto-toggle" />
+      <span>Auto</span>
+    </label>
+    <button id="compile-btn" class="btn primary" title="Compile (⌘↩)">
+      <span class="spinner" hidden></span>
+      <span class="label">Compile</span>
+    </button>
+    <button id="stop-btn" class="btn danger" hidden title="Stop the running compile">Stop</button>
+    <button id="terminal-btn" class="btn editor-only" title="Toggle the integrated terminal (⌃`)">&gt;_</button>
+    <div class="more-menu">
+      <button id="more-btn" class="btn subtle" title="More">⋯</button>
+      <div id="more-dropdown" class="dropdown right" hidden>
+        <button data-action="clean">Clean auxiliary files</button>
+        <button data-action="raw-log">Show raw log</button>
+        <button data-action="reveal">Reveal project in Finder</button>
+        <button data-action="show-all">Show hidden &amp; aux files</button>
+        <div class="sep"></div>
+        <button data-action="ws-copy" class="ws-external">Copy project into projects folder</button>
+        <button data-action="ws-move" class="ws-external">Move project into projects folder</button>
+        <button data-action="ws-trash" class="ws-internal danger">Move project to Trash</button>
+        <button data-action="ws-reveal">Reveal projects folder in Finder</button>
+        <button data-action="overleaf-token">Overleaf git token…</button>
+        <div class="sep"></div>
+        <button data-action="ext-terminal">Open in Terminal.app</button>
+        <button data-action="ext-claude">Open Claude Code in Terminal.app</button>
+        <div class="sep"></div>
+        <button data-action="shortcuts">Keyboard shortcuts</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="workspace" id="workspace">
+    <aside class="sidebar" id="sidebar">
+      <div class="pane-head">
+        <span>Files</span>
+        <div class="pane-actions">
+          <button class="icon-btn" id="new-file-btn" title="New file">＋</button>
+          <button class="icon-btn" id="new-folder-btn" title="New folder">▣</button>
+          <button class="icon-btn" id="upload-btn" title="Upload files">⇧</button>
+          <input type="file" id="upload-input" multiple hidden />
+        </div>
+      </div>
+      <div class="tree" id="tree"></div>
+      <div class="git-pane" id="git-pane">
+        <div class="pane-head clickable" id="git-head">
+          <span>Git</span>
+          <span id="git-branch" class="muted"></span>
+          <div class="pane-actions">
+            <button class="icon-btn" id="git-refresh" title="Refresh status">↻</button>
+            <button class="icon-btn" id="git-toggle" title="Collapse">▾</button>
+          </div>
+        </div>
+        <div id="git-body" class="git-body"></div>
+      </div>
+    </aside>
+    <div class="gutter" data-target="sidebar"></div>
+
+    <section class="editor-pane" id="editor-pane">
+      <div class="pane-head">
+        <span id="file-name" class="file-name">No file open</span>
+        <span id="dirty-dot" class="dirty-dot" hidden title="Unsaved changes"></span>
+        <span id="compile-target" class="target-badge" hidden></span>
+        <div class="pane-actions">
+          <button class="icon-btn" id="sync-fwd-btn" title="Jump to this position in the PDF (⌘⇧J)">→ PDF</button>
+        </div>
+      </div>
+      <div id="disk-banner" class="banner" hidden>
+        <span id="disk-banner-text">This file changed on disk.</span>
+        <button class="btn small" id="disk-reload">Reload</button>
+        <button class="btn small subtle" id="disk-keep">Keep mine</button>
+      </div>
+      <div id="editor" class="editor"></div>
+      <div id="preview" class="preview" hidden></div>
+    </section>
+    <div class="gutter" data-target="editor-pane"></div>
+
+    <section class="pdf-pane" id="pdf-pane">
+      <div class="pane-head">
+        <span>PDF</span>
+        <span id="pdf-status" class="muted"></span>
+        <div class="pane-actions">
+          <button class="icon-btn" id="zoom-out" title="Zoom out">−</button>
+          <button class="icon-btn" id="zoom-fit" title="Fit width">Fit</button>
+          <button class="icon-btn" id="zoom-in" title="Zoom in">＋</button>
+          <span class="muted" id="page-indicator"></span>
+          <a class="icon-btn" id="pdf-download" href="/api/pdf" download title="Download PDF">↓</a>
+        </div>
+      </div>
+      <div id="pdf-container" class="pdf-container">
+        <div class="pdf-empty" id="pdf-empty">Compile to see the PDF here.<br /><span class="muted">⌘-click the PDF to jump to the source line.</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="problems" id="problems">
+    <div class="hgutter" id="panel-gutter" title="Drag to resize"></div>
+    <div class="pane-head clickable" id="problems-head">
+      <div class="panel-tabs">
+        <button class="icon-btn" id="problems-tab-list" data-tab="list">Problems</button>
+        <button class="icon-btn" id="problems-tab-log" data-tab="log">Log</button>
+        <button class="icon-btn" id="problems-tab-term" data-tab="term" title="Terminal (⌃`)">Terminal <span id="term-count" class="count" hidden></span></button>
+      </div>
+      <span id="problems-summary">Ready</span>
+      <div class="pane-actions">
+        <span id="term-actions" hidden>
+          <button class="icon-btn" id="term-new" title="New terminal in this project">＋ Terminal</button>
+          <button class="icon-btn accent" id="term-claude" title="Start Claude Code in this project">✦ Claude Code</button>
+        </span>
+        <button class="icon-btn" id="problems-toggle" title="Collapse">▾</button>
+      </div>
+    </div>
+    <div id="problems-body" class="problems-body">
+      <div id="problems-list" class="problems-list"></div>
+      <pre id="raw-log" class="raw-log" hidden></pre>
+      <div id="term-panel" class="term-panel" hidden>
+        <div id="term-host" class="term-host"></div>
+        <div id="term-tabs" class="term-tabs"></div>
+        <div id="term-empty" class="term-empty">No terminals. <a href="#" id="term-empty-new">Open one</a> or <a href="#" id="term-empty-claude">start Claude Code</a> in this project.<br><span class="muted">⌃` toggles this panel.</span></div>
+      </div>
+    </div>
+  </footer>
+
+  <section id="home" class="home" hidden>
+    <div class="home-inner">
+      <div class="home-head">
+        <div>
+          <h1>Projects</h1>
+          <div class="muted home-path"><span id="home-path"></span> · <a href="#" id="home-reveal">Reveal in Finder</a> · <a href="#" id="home-change-ws" title="Choose a different folder to hold your projects">Change folder…</a></div>
+        </div>
+        <div id="home-continue" hidden>
+          <button class="btn" id="home-continue-btn">Continue editing <b id="home-continue-name"></b> ›</button>
+        </div>
+      </div>
+      <div class="home-actions">
+        <button class="btn primary" id="home-new">＋ New project</button>
+        <button class="btn" id="home-open">Open or import folder…</button>
+        <button class="btn" id="home-upload">Upload folder…</button>
+        <button class="btn" id="home-zip">Upload .zip…</button>
+        <button class="btn" id="home-overleaf">Import from Overleaf…</button>
+      </div>
+      <input type="search" id="home-search" class="home-search" placeholder="Filter projects…" autocomplete="off" />
+      <div id="home-grid" class="home-grid"></div>
+      <div id="home-recent" class="home-recent"></div>
+    </div>
+  </section>
+
+  <div id="context-menu" class="context-menu" hidden></div>
+  <div id="modal" class="modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <h3 id="modal-title"></h3>
+      <div id="modal-body" class="modal-body"></div>
+      <div id="modal-buttons" class="modal-buttons"></div>
+    </div>
+  </div>
+  <div id="toast" class="toast" hidden></div>
+
+  <script type="module" src="/build/app.js"></script>
+</body>
+</html>

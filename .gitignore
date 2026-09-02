@@ -1,0 +1,8 @@
+node_modules/
+public/build/
+.DS_Store
+
+# Your LaTeX projects. The default workspace folder is projects/; keep it out of this repo and
+# version it separately (see README → "Where your projects live").
+projects/*
+!projects/.gitkeep
