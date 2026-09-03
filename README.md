@@ -135,14 +135,25 @@ leaf help                     # full list; --json on any command for machine-rea
 
 ## Keyboard shortcuts
 
+Overleaf's editor shortcuts work here too (⌘ is Ctrl on a PC keyboard). Formatting shortcuts wrap
+the selection, or insert the command with the cursor inside when nothing is selected.
+
 | Keys | Action |
 | --- | --- |
 | ⌘S | Save |
 | ⌘↩ | Compile |
+| ⌘B / ⌘I / ⌘E | `\textbf{}` / `\textit{}` / `\emph{}` |
+| ⌘⇧T | `\texttt{}` |
+| ⌘⇧M | Inline math `$…$` |
+| ⌘⇧E / ⌘⇧I | Wrap in an `equation` / `itemize` environment |
+| ⌘/ | Toggle `%` comment |
+| ⌘U / ⌘⇧U | Uppercase / lowercase selection or word |
+| ⌘D / ⌘⇧D | Delete / duplicate line |
+| ⌘F | Find and replace |
+| ⌥G | Go to line |
 | ⌘⇧J | Jump from cursor to PDF |
 | ⌘-click / double-click PDF | Jump from PDF to source |
-| ⌘F | Find and replace |
-| ⌘/ | Toggle comment |
+| ⌃` | Toggle the terminal panel |
 
 ## Layout
 

@@ -941,9 +941,22 @@ $('more-dropdown').addEventListener('click', async (e) => {
   if (action === 'overleaf-token') setOverleafToken({ force: true });
   if (action === 'ext-terminal') openTerminal();
   if (action === 'ext-claude') openTerminal({ claude: true });
-  if (action === 'shortcuts') alert(
-    'Keyboard shortcuts\n\n⌘S  Save\n⌘↩  Compile\n⌘⇧J  Jump from cursor to PDF\n⌘-click / double-click PDF  Jump to source\n⌘F  Find / replace\n⌘/  Toggle comment\nEsc  Close menus'
-  );
+  if (action === 'shortcuts') modal({
+    title: 'Keyboard shortcuts',
+    body: `<table class="shortcuts-table">
+      <tr><td><kbd>⌘S</kbd></td><td>Save</td><td><kbd>⌘↩</kbd></td><td>Compile</td></tr>
+      <tr><td><kbd>⌘B</kbd></td><td>Bold <code>\\textbf{}</code></td><td><kbd>⌘I</kbd></td><td>Italic <code>\\textit{}</code></td></tr>
+      <tr><td><kbd>⌘E</kbd></td><td>Emphasis <code>\\emph{}</code></td><td><kbd>⌘⇧T</kbd></td><td>Typewriter <code>\\texttt{}</code></td></tr>
+      <tr><td><kbd>⌘⇧M</kbd></td><td>Inline math <code>$…$</code></td><td><kbd>⌘⇧E</kbd></td><td>Equation environment</td></tr>
+      <tr><td><kbd>⌘⇧I</kbd></td><td>Itemize environment</td><td><kbd>⌘/</kbd></td><td>Toggle <code>%</code> comment</td></tr>
+      <tr><td><kbd>⌘U</kbd></td><td>Uppercase</td><td><kbd>⌘⇧U</kbd></td><td>Lowercase</td></tr>
+      <tr><td><kbd>⌘D</kbd></td><td>Delete line</td><td><kbd>⌘⇧D</kbd></td><td>Duplicate line</td></tr>
+      <tr><td><kbd>⌘F</kbd></td><td>Find / replace</td><td><kbd>⌥G</kbd></td><td>Go to line</td></tr>
+      <tr><td><kbd>⌘⇧J</kbd></td><td>Cursor → PDF</td><td><kbd>⌘-click PDF</kbd></td><td>PDF → source</td></tr>
+      <tr><td><kbd>⌃\`</kbd></td><td>Toggle terminal</td><td><kbd>Esc</kbd></td><td>Close menus</td></tr>
+    </table><div class="hint">With text selected, the formatting shortcuts wrap the selection. On a PC keyboard, ⌘ is Ctrl.</div>`,
+    buttons: [{ label: 'Close', value: 'ok', primary: true }],
+  });
 });
 
 // ---------------------------------------------------------------------------

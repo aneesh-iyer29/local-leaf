@@ -1,6 +1,6 @@
-import { EditorState, Compartment, StateEffect, StateField } from '@codemirror/state';
+import { EditorState, EditorSelection, Compartment, StateEffect, StateField } from '@codemirror/state';
 import { EditorView, keymap, lineNumbers, highlightActiveLine, highlightActiveLineGutter, drawSelection, dropCursor, rectangularSelection, crosshairCursor, highlightSpecialChars, Decoration } from '@codemirror/view';
-import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands';
+import { defaultKeymap, history, historyKeymap, indentWithTab, deleteLine, toggleComment } from '@codemirror/commands';
 import { StreamLanguage, bracketMatching, indentOnInput, syntaxHighlighting, defaultHighlightStyle, foldGutter, foldKeymap } from '@codemirror/language';
 import { stex } from '@codemirror/legacy-modes/mode/stex';
 import { searchKeymap, highlightSelectionMatches } from '@codemirror/search';
@@ -57,6 +57,86 @@ function latexCompletions(context) {
   return null;
 }
 
+// ---- Overleaf-style editing commands ----------------------------------------------------------
+
+// Wrap each selection in before…after. With an empty selection, insert the pair and put the cursor
+// inside; with a selection, keep the wrapped text selected so a second press can nest another wrapper.
+function wrapWith(before, after) {
+  return (view) => {
+    const tr = view.state.changeByRange((range) => {
+      const text = view.state.sliceDoc(range.from, range.to);
+      const start = range.from + before.length;
+      return {
+        changes: { from: range.from, to: range.to, insert: before + text + after },
+        range: range.empty ? EditorSelection.cursor(start) : EditorSelection.range(start, start + text.length),
+      };
+    });
+    view.dispatch(tr, { scrollIntoView: true, userEvent: 'input' });
+    return true;
+  };
+}
+
+// Change the case of the selection, or of the word under the cursor when nothing is selected.
+function changeCase(fn) {
+  return (view) => {
+    const tr = view.state.changeByRange((range) => {
+      let { from, to } = range;
+      if (range.empty) { const w = view.state.wordAt(from); if (!w) return { range }; from = w.from; to = w.to; }
+      const text = view.state.sliceDoc(from, to);
+      return { changes: { from, to, insert: fn(text) }, range: EditorSelection.range(from, to) };
+    });
+    view.dispatch(tr, { userEvent: 'input' });
+    return true;
+  };
+}
+
+// Duplicate the current line (or every line touched by the selection) below itself.
+function duplicateLine(view) {
+  const tr = view.state.changeByRange((range) => {
+    const first = view.state.doc.lineAt(range.from);
+    const last = view.state.doc.lineAt(range.to);
+    const block = view.state.sliceDoc(first.from, last.to);
+    return {
+      changes: { from: last.to, insert: '\n' + block },
+      range: EditorSelection.range(range.anchor + block.length + 1, range.head + block.length + 1),
+    };
+  });
+  view.dispatch(tr, { scrollIntoView: true, userEvent: 'input' });
+  return true;
+}
+
+// Insert an environment around the selection (or an empty one) and place the cursor inside.
+function wrapEnvironment(name) {
+  return (view) => {
+    const tr = view.state.changeByRange((range) => {
+      const text = view.state.sliceDoc(range.from, range.to);
+      const line = view.state.doc.lineAt(range.from);
+      const indent = /^\s*/.exec(line.text)[0];
+      const body = text ? text : '';
+      const insert = `\\begin{${name}}\n${indent}  ${body}\n${indent}\\end{${name}}`;
+      const cursor = range.from + `\\begin{${name}}\n${indent}  `.length;
+      return { changes: { from: range.from, to: range.to, insert }, range: text ? EditorSelection.range(cursor, cursor + body.length) : EditorSelection.cursor(cursor) };
+    });
+    view.dispatch(tr, { scrollIntoView: true, userEvent: 'input' });
+    return true;
+  };
+}
+
+export const latexKeymap = [
+  { key: 'Mod-b', run: wrapWith('\\textbf{', '}') },
+  { key: 'Mod-i', run: wrapWith('\\textit{', '}') },
+  { key: 'Mod-e', run: wrapWith('\\emph{', '}') },
+  { key: 'Mod-Shift-t', run: wrapWith('\\texttt{', '}') },
+  { key: 'Mod-Shift-m', run: wrapWith('$', '$') },
+  { key: 'Mod-Shift-e', run: wrapEnvironment('equation') },
+  { key: 'Mod-Shift-i', run: wrapEnvironment('itemize') },
+  { key: 'Mod-/', run: toggleComment },
+  { key: 'Mod-u', run: changeCase((t) => t.toUpperCase()) },
+  { key: 'Mod-Shift-u', run: changeCase((t) => t.toLowerCase()) },
+  { key: 'Mod-d', run: deleteLine },
+  { key: 'Mod-Shift-d', run: duplicateLine },
+];
+
 // Highlight decoration used to flash the line targeted by an inverse SyncTeX jump.
 const setFlash = StateEffect.define();
 const flashField = StateField.define({
@@ -84,6 +164,7 @@ export function createEditor(parent, { onSave, onCompile, onSyncForward, onChang
         { key: 'Mod-s', run: () => { onSave(); return true; } },
         { key: 'Mod-Enter', run: () => { onCompile(); return true; } },
         { key: 'Mod-Shift-j', run: () => { onSyncForward(); return true; } },
+        ...latexKeymap,
         ...closeBracketsKeymap, ...defaultKeymap, ...searchKeymap, ...historyKeymap, ...foldKeymap, ...completionKeymap, indentWithTab,
       ]),
       language.of(StreamLanguage.define(stex)),
