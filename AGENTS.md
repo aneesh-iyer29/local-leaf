@@ -41,6 +41,7 @@ Add `--json` to any command for machine-readable output.
 - `server/` Express + WebSocket backend (file API, latexmk runner, log parser, SyncTeX, watcher, git, workspace)
 - `client/` browser app (CodeMirror 6, pdf.js), bundled by esbuild into `public/build/`
 - `bin/leaf.js` the CLI
+- `site/` the GitHub Pages landing page (deployed by `.github/workflows/pages.yml`); `llms.txt` is the summary for AI assistants
 - `projects/` default workspace for user projects, ignored by this repo (a moved-in folder with its own .git stays standalone)
 
 Run `npm run build` after changing anything in `client/`; restart the server after changing `server/`.

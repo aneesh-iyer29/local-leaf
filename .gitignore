@@ -6,3 +6,7 @@ public/build/
 # version it separately (see README → "Where your projects live").
 projects/*
 !projects/.gitkeep
+
+# Copied into site/ by the Pages workflow at deploy time
+site/screenshot.png
+site/llms.txt

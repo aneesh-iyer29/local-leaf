@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>local-leaf: an offline Overleaf alternative for Mac (local LaTeX editor)</title>
+<meta name="description" content="Free, open-source LaTeX editor that looks and works like Overleaf but runs on your Mac and compiles with your own TeX (MacTeX, latexmk). Live PDF with SyncTeX, Overleaf import, Git, and a CLI so Claude Code and other AI agents can edit and compile your paper.">
+<meta name="keywords" content="Overleaf alternative, offline Overleaf, local Overleaf, LaTeX editor for Mac, local LaTeX editor, MacTeX editor, SyncTeX, latexmk, Overleaf import, LaTeX Claude Code, AI LaTeX editor, thesis LaTeX">
+<meta name="author" content="Aneesh Iyer">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#1b1d21">
+<link rel="canonical" href="https://aneesh-iyer29.github.io/local-leaf/">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="alternate" type="text/plain" title="llms.txt" href="llms.txt">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="local-leaf">
+<meta property="og:title" content="local-leaf: an offline Overleaf alternative for your Mac">
+<meta property="og:description" content="An Overleaf-style LaTeX editor that runs locally and compiles with your own TeX. SyncTeX, Overleaf import, Git, and a CLI for AI agents.">
+<meta property="og:url" content="https://aneesh-iyer29.github.io/local-leaf/">
+<meta property="og:image" content="https://aneesh-iyer29.github.io/local-leaf/og.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:image:alt" content="local-leaf: an offline Overleaf alternative for your Mac">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="local-leaf: an offline Overleaf alternative for your Mac">
+<meta name="twitter:description" content="An Overleaf-style LaTeX editor that runs locally and compiles with your own TeX. SyncTeX, Overleaf import, Git, and a CLI for AI agents.">
+<meta name="twitter:image" content="https://aneesh-iyer29.github.io/local-leaf/og.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://aneesh-iyer29.github.io/local-leaf/#app",
+      "name": "local-leaf",
+      "alternateName": "local-leaf LaTeX editor",
+      "description": "Offline Overleaf alternative for macOS: a browser-based LaTeX editor that runs locally and compiles with the user's own TeX distribution through latexmk, with SyncTeX, Overleaf import, per-project Git, an integrated terminal, and a CLI for AI coding agents.",
+      "applicationCategory": "DeveloperApplication",
+      "applicationSubCategory": "LaTeX editor",
+      "operatingSystem": "macOS",
+      "url": "https://aneesh-iyer29.github.io/local-leaf/",
+      "downloadUrl": "https://github.com/aneesh-iyer29/local-leaf",
+      "screenshot": "https://aneesh-iyer29.github.io/local-leaf/screenshot.png",
+      "softwareRequirements": "macOS, Node.js 18+, a TeX distribution with latexmk and synctex (MacTeX)",
+      "license": "https://opensource.org/licenses/MIT",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "author": { "@type": "Person", "name": "Aneesh Iyer", "url": "https://www.aneesh-iyer.com" },
+      "sameAs": ["https://github.com/aneesh-iyer29/local-leaf"],
+      "keywords": "LaTeX, Overleaf alternative, offline LaTeX editor, SyncTeX, latexmk, MacTeX, Claude Code, AI agents"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "local-leaf",
+      "codeRepository": "https://github.com/aneesh-iyer29/local-leaf",
+      "programmingLanguage": "JavaScript",
+      "runtimePlatform": "Node.js",
+      "license": "https://opensource.org/licenses/MIT",
+      "targetProduct": { "@id": "https://aneesh-iyer29.github.io/local-leaf/#app" }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is there an offline version of Overleaf?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Overleaf itself needs a connection, and its self-hosted Community Edition needs Docker. local-leaf is an Overleaf-style editor (file tree, source, live PDF, SyncTeX, the same shortcuts) that runs entirely on your Mac and compiles with MacTeX, so it works offline." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I move a project from Overleaf to my Mac?",
+          "acceptedAnswer": { "@type": "Answer", "text": "In Overleaf use Menu, Download, Source, then Upload .zip in local-leaf. On a paid Overleaf plan you can paste the project URL into Import from Overleaf and it is cloned over git." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can Claude Code or another AI agent edit my LaTeX paper?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Run Claude Code from the integrated terminal, or any agent in the project folder. It edits the .tex files, runs leaf compile, reads leaf problems for errors with file and line, and the editor and PDF update live." }
+        },
+        {
+          "@type": "Question",
+          "name": "Which TeX engines does local-leaf support?",
+          "acceptedAnswer": { "@type": "Answer", "text": "pdfLaTeX, XeLaTeX and LuaLaTeX through latexmk, which also runs BibTeX or Biber when the document needs them." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does local-leaf run on Windows or Linux?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It is macOS-first today. The server is plain Node, so small portability patches are welcome." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<style>
+  :root {
+    --bg: #1b1d21;
+    --bg-2: #22252a;
+    --bg-3: #2a2e34;
+    --border: #33373e;
+    --fg: #e6e6e6;
+    --fg-2: #b4b9c1;
+    --muted: #8b919a;
+    --accent: #47a248;
+    --accent-2: #5cb85d;
+    --on-accent: #0f1a10;
+    --code: #16181b;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: "SF Mono", ui-monospace, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #fbfbfa;
+      --bg-2: #ffffff;
+      --bg-3: #f1f2f0;
+      --border: #dfe1dc;
+      --fg: #1b1d21;
+      --fg-2: #454a52;
+      --muted: #6b7079;
+      --accent: #3a8a3b;
+      --accent-2: #2f7a30;
+      --on-accent: #ffffff;
+      --code: #1b1d21;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 var(--font); -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent-2); text-underline-offset: 3px; }
+  a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; border-radius: 4px; }
+  code { font: 0.88em var(--mono); background: var(--bg-3); padding: 1px 5px; border-radius: 4px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  .leaf { width: 18px; height: 18px; display: inline-block; background: var(--accent); border-radius: 0 80% 0 80%; transform: rotate(-10deg); flex: none; }
+  header.top { border-bottom: 1px solid var(--border); background: var(--bg-2); }
+  header.top .wrap { display: flex; align-items: center; gap: 24px; height: 56px; }
+  .brand { display: flex; align-items: center; gap: 8px; font-weight: 650; color: var(--fg); text-decoration: none; letter-spacing: 0.2px; }
+  header.top nav { margin-left: auto; display: flex; gap: 20px; }
+  header.top nav a { color: var(--fg-2); text-decoration: none; font-size: 14px; transition: color 0.15s; }
+  header.top nav a:hover { color: var(--fg); }
+
+  .hero { padding: 72px 0 36px; }
+  .eyebrow { font-size: 13px; font-weight: 600; color: var(--accent-2); letter-spacing: 0.02em; }
+  .hero h1 { font-size: clamp(34px, 5.2vw, 56px); line-height: 1.08; letter-spacing: -0.025em; margin: 12px 0 18px; max-width: 15em; text-wrap: balance; }
+  .hero p.lead { font-size: 19px; color: var(--fg-2); max-width: 38em; margin: 0 0 28px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: 8px;
+    font-weight: 600; font-size: 15px; text-decoration: none; border: 1px solid var(--border);
+    transition: background-color 0.15s, border-color 0.15s;
+  }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .btn.primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+  .btn.secondary { background: var(--bg-3); color: var(--fg); }
+  .btn.secondary:hover { border-color: var(--muted); }
+  .btn svg { width: 18px; height: 18px; flex: none; }
+  .quick { margin-top: 26px; max-width: 560px; }
+  pre {
+    margin: 0; padding: 14px 16px; background: var(--code); color: #d8dce2; border: 1px solid var(--border); border-radius: 8px;
+    font: 13.5px/1.7 var(--mono); overflow-x: auto;
+  }
+  pre code { background: none; padding: 0; font: inherit; color: inherit; }
+  pre .c { color: #7d848e; }
+  pre .p { color: #5cb85d; user-select: none; }
+
+  .shot { margin: 8px 0 0; }
+  .shot img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--border); }
+  .shot figcaption { margin-top: 10px; font-size: 14px; color: var(--muted); }
+
+  section { padding: 72px 0 0; }
+  section h2 { font-size: clamp(26px, 3.4vw, 34px); letter-spacing: -0.02em; line-height: 1.2; margin: 0 0 10px; }
+  section .sub { color: var(--fg-2); margin: 0 0 28px; max-width: 42em; }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+  .card h3 { font-size: 16px; margin: 0 0 6px; display: flex; align-items: center; gap: 8px; }
+  .card h3 .leaf { width: 10px; height: 10px; }
+  .card p { margin: 0; font-size: 15px; color: var(--fg-2); }
+
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 560px; }
+  th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  thead th { background: var(--bg-3); font-size: 13px; color: var(--muted); font-weight: 600; }
+  thead th.us { color: var(--accent-2); }
+  tbody th { font-weight: 600; color: var(--fg); width: 26%; }
+  td { color: var(--fg-2); }
+  td.us { color: var(--fg); background: color-mix(in srgb, var(--accent) 7%, transparent); }
+  .note { font-size: 14px; color: var(--muted); margin: 14px 0 0; max-width: 52em; }
+
+  .agents { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+  .agents ul { margin: 0; padding-left: 20px; color: var(--fg-2); }
+  .agents li + li { margin-top: 8px; }
+
+  .req { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+  .req ul { margin: 0; padding-left: 20px; color: var(--fg-2); }
+
+  .faq { max-width: 52em; }
+  details { border-top: 1px solid var(--border); }
+  details:last-child { border-bottom: 1px solid var(--border); }
+  summary { list-style: none; cursor: pointer; padding: 16px 32px 16px 0; font-weight: 600; position: relative; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: '+'; position: absolute; right: 4px; top: 14px; font: 20px var(--mono); color: var(--muted); }
+  details[open] summary::after { content: '–'; }
+  details p { margin: 0 0 18px; color: var(--fg-2); font-size: 15px; }
+
+  .cta { padding: 80px 0; }
+  .cta .box { background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 32px; }
+  .cta h2 { margin: 0 0 8px; font-size: 28px; letter-spacing: -0.02em; }
+  .cta p { color: var(--fg-2); margin: 0 0 22px; max-width: 40em; }
+
+  footer { border-top: 1px solid var(--border); padding: 24px 0 40px; font-size: 14px; color: var(--muted); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+  footer a { color: var(--fg-2); }
+  footer nav { display: flex; flex-wrap: wrap; gap: 18px; }
+
+  @media (max-width: 860px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+    .agents, .req { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .wrap { padding: 0 16px; }
+    header.top nav a.opt { display: none; }
+    .hero { padding-top: 44px; }
+    .hero p.lead { font-size: 17px; }
+    .grid { grid-template-columns: 1fr; }
+    .btn { flex: 1 1 auto; justify-content: center; }
+    .cta .box { padding: 22px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="./"><span class="leaf" aria-hidden="true"></span>local-leaf</a>
+    <nav aria-label="Primary">
+      <a class="opt" href="#features">Features</a>
+      <a class="opt" href="#vs-overleaf">vs Overleaf</a>
+      <a class="opt" href="#ai-agents">AI agents</a>
+      <a class="opt" href="#faq">FAQ</a>
+      <a href="https://github.com/aneesh-iyer29/local-leaf">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="wrap">
+      <div class="eyebrow">Free and open source · macOS · works offline</div>
+      <h1>An offline Overleaf alternative that compiles on your Mac</h1>
+      <p class="lead">
+        local-leaf is a LaTeX editor that looks and works like Overleaf but runs on your own machine and
+        compiles with the TeX you already have. Live PDF, SyncTeX both ways, Overleaf import, and Git built in.
+        No account, no upload, no compile timeout.
+      </p>
+      <div class="actions">
+        <a class="btn primary" href="https://github.com/aneesh-iyer29/local-leaf">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          Get it on GitHub
+        </a>
+        <a class="btn secondary" href="#install">Quick start</a>
+      </div>
+      <div class="quick">
+        <pre><code><span class="p">$ </span>git clone https://github.com/aneesh-iyer29/local-leaf
+<span class="p">$ </span>cd local-leaf && npm install && npm start</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <figure class="shot">
+      <img src="screenshot.png" width="2880" height="1800"
+           alt="local-leaf editor: file tree and Git panel on the left, a LaTeX file in the CodeMirror editor, the compiled PDF on the right, and the integrated terminal running leaf compile">
+      <figcaption>Source, live PDF, Git and a terminal in one browser tab. Everything runs on localhost.</figcaption>
+    </figure>
+  </div>
+
+  <section id="features" aria-labelledby="features-h">
+    <div class="wrap">
+      <h2 id="features-h">Everything you use in Overleaf, on your own disk</h2>
+      <p class="sub">Point local-leaf at a folder of <code>.tex</code> files. It never copies or uploads them, so any other tool can work on the same project while the editor follows along.</p>
+      <div class="grid">
+        <div class="card"><h3><span class="leaf" aria-hidden="true"></span>Live PDF with SyncTeX</h3><p>pdf.js preview that jumps both ways: ⌘⇧J from source to PDF, ⌘-click from PDF to source. Auto-compiles when a file changes on disk.</p></div>
+        <div class="card"><h3><span class="leaf" aria-hidden="true"></span>Your TeX, no limits</h3><p><code>latexmk</code> with pdfLaTeX, XeLaTeX or LuaLaTeX from MacTeX. No compile timeout, and errors come back parsed with file and line.</p></div>
+        <div class="card"><h3><span class="leaf" aria-hidden="true"></span>Import from Overleaf</h3><p>Bring a project over from a downloaded <code>.zip</code> on any plan, or straight from Overleaf's git URL on a paid one.</p></div>
+        <div class="card"><h3><span class="leaf" aria-hidden="true"></span>Git in the sidebar</h3><p>Commit, push, pull, or publish a project to GitHub without leaving the editor. Keep your papers in a private repo.</p></div>
+        <div class="card"><h3><span class="leaf" aria-hidden="true"></span>Terminal and Claude Code</h3><p>A VS Code-style terminal opens in the project folder, with a one-click Claude Code launcher for help on the document.</p></div>
+        <div class="card"><h3><span class="leaf" aria-hidden="true"></span>Overleaf's shortcuts</h3><p>⌘B, ⌘I, ⌘E, ⌘⇧M, ⌘/ and the rest work as they do in Overleaf, with completions for commands, <code>\ref</code> labels and <code>\cite</code> keys.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="vs-overleaf" aria-labelledby="vs-h">
+    <div class="wrap">
+      <h2 id="vs-h">local-leaf compared with Overleaf</h2>
+      <p class="sub">Same way of working, different place. Here is what changes when the editor lives on your Mac.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><td></td><th scope="col">Overleaf (overleaf.com)</th><th scope="col" class="us">local-leaf</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Where your files live</th><td>Overleaf's servers</td><td class="us">A folder on your Mac</td></tr>
+            <tr><th scope="row">What compiles them</th><td>Overleaf's TeX Live, with a compile time limit</td><td class="us">Your own TeX distribution, no time limit</td></tr>
+            <tr><th scope="row">Works offline</th><td>No</td><td class="us">Yes</td></tr>
+            <tr><th scope="row">Git and GitHub</th><td>Git access and GitHub sync on paid plans</td><td class="us">Commit, push, pull and publish from the sidebar, free</td></tr>
+            <tr><th scope="row">AI agents and scripts</th><td>Browser only</td><td class="us"><code>leaf</code> CLI and an integrated terminal with Claude Code</td></tr>
+            <tr><th scope="row">Real-time collaboration</th><td>Yes</td><td class="us">No: one user, share through git</td></tr>
+            <tr><th scope="row">Price</th><td>Free tier and paid plans</td><td class="us">Free, MIT licensed</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Other options: <a href="https://github.com/overleaf/overleaf">Overleaf Community Edition</a> is the full multi-user server you self-host with Docker; local-leaf is one Node process with no Docker and no accounts. VS Code with <a href="https://github.com/James-Yu/LaTeX-Workshop">LaTeX Workshop</a> suits people who live in VS Code; local-leaf keeps Overleaf's layout and shortcuts in a browser tab.</p>
+    </div>
+  </section>
+
+  <section id="ai-agents" aria-labelledby="ai-h">
+    <div class="wrap">
+      <h2 id="ai-h">Write with Claude Code, Codex, or any terminal agent</h2>
+      <p class="sub">Because the project is a plain folder, an AI coding agent can edit your paper directly while you watch the source and PDF update live. The <code>leaf</code> CLI gives it the same view of the editor you have.</p>
+      <div class="agents">
+        <pre><code><span class="c"># the loop an agent runs, from AGENTS.md</span>
+<span class="p">$ </span>leaf open thesis        <span class="c"># open a project by name</span>
+<span class="p">$ </span>leaf root               <span class="c"># where to edit files</span>
+<span class="p">$ </span>leaf compile            <span class="c"># build, wait, exit 1 on failure</span>
+OK  main.tex  (0 errors, 0 warnings, 0 notes)  → main.pdf
+<span class="p">$ </span>leaf problems --errors  <span class="c"># errors with file:line</span>
+<span class="p">$ </span>leaf synctex main.tex:42
+<span class="p">$ </span>leaf git commit -m "Tighten the proof"</code></pre>
+        <ul>
+          <li><strong>One click:</strong> the terminal panel's <strong>✦ Claude Code</strong> button starts <code>claude</code> in the open project.</li>
+          <li><strong>Any agent:</strong> <code>AGENTS.md</code> teaches Codex, Cursor, Gemini CLI and others the edit → compile → fix loop; <code>CLAUDE.md</code> imports it.</li>
+          <li><strong>Machine-readable:</strong> every <code>leaf</code> command accepts <code>--json</code>, and <code>leaf events</code> streams file and compile events.</li>
+          <li><strong>Nothing hidden:</strong> the agent's edits land in the same files the editor shows, so you review them as they happen and commit from the Git panel.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="install" aria-labelledby="install-h">
+    <div class="wrap">
+      <h2 id="install-h">Quick start</h2>
+      <p class="sub">local-leaf runs from source. It opens in your browser at <code>http://localhost:3737</code> and binds to localhost only.</p>
+      <div class="req">
+        <pre><code><span class="p">$ </span>git clone https://github.com/aneesh-iyer29/local-leaf
+<span class="p">$ </span>cd local-leaf
+<span class="p">$ </span>npm install
+<span class="p">$ </span>npm start                 <span class="c"># opens the editor</span>
+<span class="p">$ </span>npm link                  <span class="c"># puts `leaf` on your PATH</span></code></pre>
+        <ul>
+          <li>macOS with a TeX distribution that provides <code>latexmk</code> and <code>synctex</code>. <a href="https://www.tug.org/mactex/">MacTeX</a> puts them in <code>/Library/TeX/texbin</code>.</li>
+          <li>Node.js 18 or newer.</li>
+          <li>Projects live in one workspace folder; point it at a private git repo with <code>leaf workspace &lt;path&gt;</code> to version your papers separately.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" aria-labelledby="faq-h">
+    <div class="wrap">
+      <h2 id="faq-h">FAQ</h2>
+      <div class="faq">
+        <details>
+          <summary>Is there an offline version of Overleaf?</summary>
+          <p>Overleaf itself needs a connection, and its self-hosted Community Edition needs Docker. local-leaf gives you an Overleaf-style editor (file tree, source, live PDF, SyncTeX, the same shortcuts) that runs entirely on your Mac and compiles with MacTeX, so it works on a plane.</p>
+        </details>
+        <details>
+          <summary>How do I move a project from Overleaf to my Mac?</summary>
+          <p>In Overleaf use <strong>Menu → Download → Source</strong>, then <strong>Upload .zip…</strong> in local-leaf. On a paid Overleaf plan you can instead paste the project URL into <strong>Import from Overleaf…</strong> and it is cloned over git.</p>
+        </details>
+        <details>
+          <summary>Can Claude Code or another AI agent edit my LaTeX paper?</summary>
+          <p>Yes, and you watch it happen. Press <strong>✦ Claude Code</strong> in the terminal panel, or run any agent in the project folder. It edits the <code>.tex</code> files, runs <code>leaf compile</code>, reads <code>leaf problems</code> for errors with file and line, and the editor and PDF update live.</p>
+        </details>
+        <details>
+          <summary>Which TeX engines and bibliography tools work?</summary>
+          <p>pdfLaTeX, XeLaTeX and LuaLaTeX through <code>latexmk</code>, which also runs BibTeX or Biber when your document needs them. <code>\cite</code> completions come from the <code>.bib</code> files in the project.</p>
+        </details>
+        <details>
+          <summary>Does it support real-time collaboration?</summary>
+          <p>No. local-leaf is a single-user tool. Share work through git: every project can be committed and pushed from the sidebar.</p>
+        </details>
+        <details>
+          <summary>Does it run on Windows or Linux?</summary>
+          <p>It is macOS-first today. The server is plain Node, so small portability patches are welcome.</p>
+        </details>
+        <details>
+          <summary>Can other people reach my editor?</summary>
+          <p>No. The server binds to <code>127.0.0.1</code> only and should never be exposed to other machines, since it can read files and run a shell as you.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta">
+    <div class="wrap">
+      <div class="box">
+        <h2>Keep your papers on your own Mac</h2>
+        <p>local-leaf is free and MIT-licensed. If it saves you from a compile timeout, a star on GitHub helps other LaTeX writers find it.</p>
+        <div class="actions">
+          <a class="btn primary" href="https://github.com/aneesh-iyer29/local-leaf">Star on GitHub</a>
+          <a class="btn secondary" href="https://github.com/aneesh-iyer29/local-leaf#readme">Read the docs</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>MIT © 2026 <a href="https://www.aneesh-iyer.com">Aneesh Iyer</a>. Not affiliated with Overleaf.</span>
+    <nav aria-label="Footer">
+      <a href="https://github.com/aneesh-iyer29/local-leaf">Source</a>
+      <a href="https://github.com/aneesh-iyer29/local-leaf/issues">Issues</a>
+      <a href="https://github.com/aneesh-iyer29/local-leaf/blob/main/AGENTS.md">AGENTS.md</a>
+      <a href="llms.txt">llms.txt</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
