@@ -2,7 +2,29 @@
   "name": "local-leaf",
   "version": "0.1.0",
   "private": true,
-  "description": "A local, browser-based Overleaf-style LaTeX editor that compiles with the TeX distribution on your machine.",
+  "description": "Offline Overleaf alternative for macOS: a local, browser-based LaTeX editor that compiles with your own TeX (latexmk), with SyncTeX, Overleaf import, Git, an integrated terminal, and a CLI for AI agents like Claude Code.",
+  "keywords": [
+    "latex",
+    "latex-editor",
+    "overleaf",
+    "overleaf-alternative",
+    "tex",
+    "latexmk",
+    "synctex",
+    "mactex",
+    "pdflatex",
+    "xelatex",
+    "lualatex",
+    "codemirror",
+    "pdfjs",
+    "offline",
+    "local-first",
+    "academic-writing",
+    "thesis",
+    "claude-code",
+    "ai-agents",
+    "macos"
+  ],
   "type": "module",
   "bin": {
     "leaf": "bin/leaf.js"
@@ -34,6 +56,7 @@
     "ws": "^8.18.0"
   },
   "license": "MIT",
+  "author": "Aneesh Iyer",
   "repository": {
     "type": "git",
     "url": "https://github.com/aneesh-iyer29/local-leaf.git"
@@ -44,5 +67,8 @@
   },
   "os": [
     "darwin"
-  ]
+  ],
+  "bugs": {
+    "url": "https://github.com/aneesh-iyer29/local-leaf/issues"
+  }
 }

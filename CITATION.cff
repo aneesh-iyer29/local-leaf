@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If local-leaf helped you write a paper or thesis, you can cite it like this."
+title: "local-leaf: an offline Overleaf-style LaTeX editor for macOS"
+type: software
+authors:
+  - given-names: Aneesh
+    family-names: Iyer
+repository-code: "https://github.com/aneesh-iyer29/local-leaf"
+url: "https://aneesh-iyer29.github.io/local-leaf/"
+license: MIT
+version: 0.1.0
+abstract: >-
+  local-leaf is a browser-based LaTeX editor in the spirit of Overleaf that runs locally on macOS
+  and compiles with the user's own TeX distribution through latexmk, with SyncTeX, Overleaf
+  import, per-project Git, an integrated terminal, and a command-line interface for AI coding
+  agents.
+keywords:
+  - LaTeX
+  - Overleaf alternative
+  - LaTeX editor
+  - SyncTeX
+  - macOS
+  - AI agents

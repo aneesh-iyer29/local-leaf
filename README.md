@@ -1,9 +1,22 @@
-# local-leaf
+# local-leaf: an offline Overleaf alternative for your Mac
 
-A private, browser-based LaTeX editor in the spirit of Overleaf that compiles with the TeX
-distribution already on your Mac. Point it at a folder of `.tex` files, edit in the browser, and
-get a live PDF with SyncTeX jumping in both directions. Files stay on disk, so git, your terminal
-and AI coding agents can work on the same project and the editor picks up every change live.
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![Platform: macOS](https://img.shields.io/badge/platform-macOS-lightgrey)
+![Node 18+](https://img.shields.io/badge/node-%3E%3D18-3c873a)
+![Works with Claude Code](https://img.shields.io/badge/works%20with-Claude%20Code-d97757)
+
+local-leaf is a free, open-source LaTeX editor that looks and works like Overleaf but runs on your
+own Mac and compiles with the TeX distribution you already have (MacTeX, `latexmk`). Point it at a
+folder of `.tex` files, edit in the browser, and get a live PDF with SyncTeX jumping in both
+directions. No account, no upload, no compile timeout, and it keeps working offline.
+
+Files stay on disk, so git, your terminal and AI coding agents such as Claude Code or Codex can
+work on the same project and the editor picks up every change live. The `leaf` command line lets an
+agent open, compile and read errors exactly as you see them.
+
+![local-leaf: file tree and Git panel on the left, a LaTeX file in the editor, the compiled PDF on the right, and the integrated terminal running leaf compile](docs/screenshot.png)
+
+## Features
 
 - **Editor:** CodeMirror 6 with LaTeX highlighting, spellcheck, find/replace, and completions for
   commands, environments, `\ref` labels and `\cite` keys.
@@ -17,6 +30,27 @@ and AI coding agents can work on the same project and the editor picks up every 
 - **Terminal:** an integrated, VS Code-style terminal panel that opens in the project folder, with
   a one-click **Claude Code** launcher for AI help on the document.
 - **CLI:** `leaf` drives everything from a shell, for you or for an agent.
+
+## local-leaf compared with Overleaf
+
+| | Overleaf (overleaf.com) | local-leaf |
+| --- | --- | --- |
+| Where your files live | Overleaf's servers | A folder on your Mac |
+| What compiles them | Overleaf's TeX Live, with a compile time limit | Your own TeX distribution, no time limit |
+| Works offline | No | Yes |
+| Git and GitHub | Git access and GitHub sync on paid plans | Commit, push, pull and publish to GitHub from the sidebar, free |
+| AI agents and scripts | Browser only | `leaf` CLI plus an integrated terminal with a Claude Code launcher |
+| Real-time collaboration | Yes | No: one user, share through git |
+| Price | Free tier and paid plans | Free, MIT licensed |
+
+Moving over is one step: import a project from a `.zip` or straight from Overleaf's git URL (see
+[Importing from Overleaf](#importing-from-overleaf)).
+
+**Other options.** [Overleaf Community Edition](https://github.com/overleaf/overleaf) is the full
+multi-user Overleaf server you self-host with Docker; local-leaf is one Node process with no Docker
+and no accounts. VS Code with [LaTeX Workshop](https://github.com/James-Yu/LaTeX-Workshop) suits
+people who already live in VS Code; local-leaf keeps Overleaf's layout, shortcuts and Overleaf import
+in a browser tab.
 
 ## Requirements
 
@@ -54,8 +88,6 @@ leaf workspace ~/Documents/my-latex-projects
 or use **Change folder…** on the home page. The Git panel then commits each project's files into
 that repository and pushes them wherever it points, while this repo stays clean and shareable. The
 `LOCAL_LEAF_PROJECTS` environment variable overrides the setting for one run.
-
-## Projects folder
 
 ## Importing from Overleaf
 
@@ -100,7 +132,7 @@ shell that starts in the open project's folder, running inside the page. Open as
 they are listed on the right of the panel and keep running while you switch tabs or reload the page.
 **✦ Claude Code** opens a terminal that starts `claude` in the project, so you can ask it to work on
 the document while the editor and PDF update live (it reads `CLAUDE.md`, which explains the `leaf`
-compile loop). Drag the panel's top edge to resize it.
+compile loop; other agents read the same notes from `AGENTS.md`). Drag the panel's top edge to resize it.
 
 The integrated terminal needs `node-pty`, which `npm install` builds for your machine. If it ever
 fails to load, the ⋯ menu still offers **Open in Terminal.app** and **Open Claude Code in
@@ -131,7 +163,7 @@ leaf events                   # stream file-change and compile events as JSON li
 leaf help                     # full list; --json on any command for machine-readable output
 ```
 
-`CLAUDE.md` in the repo tells Claude Code how to use this loop.
+`AGENTS.md` (imported by `CLAUDE.md`) tells Claude Code, Codex and other coding agents how to use this loop.
 
 ## Keyboard shortcuts
 
@@ -154,6 +186,47 @@ the selection, or insert the command with the cursor inside when nothing is sele
 | ⌘⇧J | Jump from cursor to PDF |
 | ⌘-click / double-click PDF | Jump from PDF to source |
 | ⌃` | Toggle the terminal panel |
+
+## FAQ
+
+### Is there an offline version of Overleaf?
+
+Overleaf itself needs a connection, and its self-hosted Community Edition needs Docker. local-leaf
+gives you an Overleaf-style editor (file tree, source, live PDF, SyncTeX, the same shortcuts) that
+runs entirely on your Mac and compiles with MacTeX, so it works on a plane.
+
+### How do I move a project from Overleaf to my Mac?
+
+In Overleaf use **Menu → Download → Source**, then **Upload .zip…** in local-leaf. On a paid
+Overleaf plan you can instead paste the project URL into **Import from Overleaf…** and it is cloned
+over git. Details in [Importing from Overleaf](#importing-from-overleaf).
+
+### Can Claude Code or another AI agent edit my LaTeX paper?
+
+Yes, and you watch it happen. Open the terminal panel and press **✦ Claude Code**, or run any agent
+in the project folder. It edits the `.tex` files directly, runs `leaf compile`, reads `leaf problems`
+for errors with file and line, and the editor and PDF update live. `AGENTS.md` and `CLAUDE.md` teach
+the agent that loop.
+
+### Which TeX engines and bibliography tools work?
+
+pdfLaTeX, XeLaTeX and LuaLaTeX through `latexmk`, which also runs BibTeX or Biber when your document
+needs them. `\cite` completions come from the `.bib` files in the project.
+
+### Do I need MacTeX?
+
+You need a TeX distribution that provides `latexmk` and `synctex`. MacTeX puts them in
+`/Library/TeX/texbin`, which is where local-leaf looks; with BasicTeX, add `latexmk` through
+`tlmgr install latexmk`.
+
+### Does it run on Windows or Linux?
+
+It is macOS-first today. The server is plain Node, so small portability patches are welcome; see
+[CONTRIBUTING.md](CONTRIBUTING.md).
+
+### Can other people reach my editor?
+
+No. The server binds to `127.0.0.1` only. See [Security](#security).
 
 ## Layout
 
