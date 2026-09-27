@@ -1,7 +1,8 @@
 name: Pages
 
 # Publishes the landing page in site/ to https://aneesh-iyer29.github.io/local-leaf/.
-# The screenshot and llms.txt are copied in at deploy time so each exists once in the repo.
+# The screenshot, demo video and its poster, and llms.txt are copied in at deploy time so each
+# exists once in the repo.
 on:
   push:
     branches: [main]
@@ -9,6 +10,8 @@ on:
       - 'site/**'
       - 'llms.txt'
       - 'docs/screenshot.png'
+      - 'docs/demo.mp4'
+      - 'docs/demo.jpg'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -29,7 +32,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - run: cp docs/screenshot.png llms.txt site/
+      - run: cp docs/screenshot.png docs/demo.mp4 docs/demo.jpg llms.txt site/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

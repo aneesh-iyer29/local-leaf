@@ -52,6 +52,16 @@
       "keywords": "LaTeX, Overleaf alternative, offline LaTeX editor, SyncTeX, latexmk, MacTeX, Claude Code, AI agents"
     },
     {
+      "@type": "VideoObject",
+      "name": "local-leaf in 22 seconds",
+      "description": "An author is added to a LaTeX paper in local-leaf, latexmk compiles it with the Mac's own TeX and the PDF updates, then the leaf CLI runs the same compile from the integrated terminal.",
+      "thumbnailUrl": "https://aneesh-iyer29.github.io/local-leaf/demo.jpg",
+      "contentUrl": "https://aneesh-iyer29.github.io/local-leaf/demo.mp4",
+      "uploadDate": "2026-09-27",
+      "duration": "PT22S",
+      "about": { "@id": "https://aneesh-iyer29.github.io/local-leaf/#app" }
+    },
+    {
       "@type": "SoftwareSourceCode",
       "name": "local-leaf",
       "codeRepository": "https://github.com/aneesh-iyer29/local-leaf",
@@ -166,7 +176,9 @@
   pre .p { color: #5cb85d; user-select: none; }
 
   .shot { margin: 8px 0 0; }
-  .shot img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--border); }
+  .shot img, .shot video { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--border); }
+  .shot video { aspect-ratio: 16 / 9; background: #fbfaf8; }
+  #features .shot { margin: 28px 0 0; }
   .shot figcaption { margin-top: 10px; font-size: 14px; color: var(--muted); }
 
   section { padding: 72px 0 0; }
@@ -272,10 +284,10 @@
   </div>
 
   <div class="wrap">
-    <figure class="shot">
-      <img src="screenshot.png" width="2880" height="1800"
-           alt="local-leaf editor: file tree and Git panel on the left, a LaTeX file in the CodeMirror editor, the compiled PDF on the right, and the integrated terminal running leaf compile">
-      <figcaption>Source, live PDF, Git and a terminal in one browser tab. Everything runs on localhost.</figcaption>
+    <figure class="shot" id="demo">
+      <video id="demo-video" src="demo.mp4" poster="demo.jpg" width="1920" height="1080" controls muted loop playsinline preload="metadata"
+             aria-label="22-second demo: an author is added to main.tex, latexmk compiles it on the Mac and the PDF updates, then leaf compile runs the same build from the integrated terminal"></video>
+      <figcaption>22 seconds, with sound: a real edit compiled by latexmk on this Mac, then the same build from the <code>leaf</code> CLI.</figcaption>
     </figure>
   </div>
 
@@ -291,6 +303,11 @@
         <div class="card"><h3><span class="leaf" aria-hidden="true"></span>Terminal and Claude Code</h3><p>A VS Code-style terminal opens in the project folder, with a one-click Claude Code launcher for help on the document.</p></div>
         <div class="card"><h3><span class="leaf" aria-hidden="true"></span>Overleaf's shortcuts</h3><p>⌘B, ⌘I, ⌘E, ⌘⇧M, ⌘/ and the rest work as they do in Overleaf, with completions for commands, <code>\ref</code> labels and <code>\cite</code> keys.</p></div>
       </div>
+      <figure class="shot">
+        <img src="screenshot.png" width="2880" height="1800" loading="lazy"
+             alt="local-leaf editor: file tree and Git panel on the left, a LaTeX file in the CodeMirror editor, the compiled PDF on the right, and the integrated terminal running leaf compile">
+        <figcaption>Source, live PDF, Git and a terminal in one browser tab. Everything runs on localhost.</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -420,5 +437,13 @@ OK  main.tex  (0 errors, 0 warnings, 0 notes)  → main.pdf
   </div>
 </footer>
 
+<script>
+  // The demo plays muted while it is on screen; the controls unmute it. Reduced motion keeps the poster.
+  (() => {
+    const v = document.getElementById('demo-video');
+    if (!v || !('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    new IntersectionObserver(([e]) => { if (e.isIntersecting) v.play().catch(() => {}); else v.pause(); }, { threshold: 0.5 }).observe(v);
+  })();
+</script>
 </body>
 </html>
