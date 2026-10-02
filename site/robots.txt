@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://aneesh-iyer29.github.io/local-leaf/sitemap.xml
+Sitemap: https://local-leaf.aneeshiyer.com/sitemap.xml

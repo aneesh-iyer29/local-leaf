@@ -18,9 +18,9 @@ Key facts:
 - [README](https://github.com/aneesh-iyer29/local-leaf/blob/main/README.md): features, install, Overleaf import, Git, terminal, CLI, shortcuts, comparison with Overleaf, FAQ
 - [AGENTS.md](https://raw.githubusercontent.com/aneesh-iyer29/local-leaf/main/AGENTS.md): how a coding agent should drive the `leaf` CLI to edit and compile a LaTeX project
 - [CLI source](https://raw.githubusercontent.com/aneesh-iyer29/local-leaf/main/bin/leaf.js): every `leaf` command
-- [Demo video](https://aneesh-iyer29.github.io/local-leaf/demo.mp4): 22 seconds, a real edit compiled by latexmk and the same build from `leaf compile`
+- [Demo video](https://local-leaf.aneeshiyer.com/demo.mp4): 22 seconds, a real edit compiled by latexmk and the same build from `leaf compile`
 
 ## Optional
 
 - [Contributing](https://raw.githubusercontent.com/aneesh-iyer29/local-leaf/main/CONTRIBUTING.md): development setup and ground rules
-- [Website](https://aneesh-iyer29.github.io/local-leaf/): project landing page
+- [Website](https://local-leaf.aneeshiyer.com/): project landing page

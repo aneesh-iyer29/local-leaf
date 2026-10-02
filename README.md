@@ -14,9 +14,9 @@ Files stay on disk, so git, your terminal and AI coding agents such as Claude Co
 work on the same project and the editor picks up every change live. The `leaf` command line lets an
 agent open, compile and read errors exactly as you see them.
 
-[![Watch the 22-second demo: an author is added to main.tex, latexmk compiles it on the Mac and the PDF updates, then leaf compile runs the same build from the integrated terminal](docs/demo-thumb.jpg)](https://aneesh-iyer29.github.io/local-leaf/#demo)
+[![Watch the 22-second demo: an author is added to main.tex, latexmk compiles it on the Mac and the PDF updates, then leaf compile runs the same build from the integrated terminal](docs/demo-thumb.jpg)](https://local-leaf.aneeshiyer.com/#demo)
 
-<p align="center"><sub>▶ <a href="https://aneesh-iyer29.github.io/local-leaf/#demo">Watch the 22-second demo</a> (with sound) · <a href="docs/demo.mp4">download the MP4</a></sub></p>
+<p align="center"><sub>▶ <a href="https://local-leaf.aneeshiyer.com/#demo">Watch the 22-second demo</a> (with sound) · <a href="docs/demo.mp4">download the MP4</a></sub></p>
 
 ## Features
 

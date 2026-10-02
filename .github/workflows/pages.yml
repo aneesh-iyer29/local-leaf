@@ -1,6 +1,6 @@
 name: Pages
 
-# Publishes the landing page in site/ to https://aneesh-iyer29.github.io/local-leaf/.
+# Publishes the landing page in site/ to https://local-leaf.aneeshiyer.com/.
 # The screenshot, demo video and its poster, and llms.txt are copied in at deploy time so each
 # exists once in the repo.
 on:
